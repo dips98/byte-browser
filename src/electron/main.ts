@@ -1,10 +1,9 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import * as path from 'path';
-
 
 let mainWindow: Electron.BrowserWindow;
 
-function createWindow() {
+function createMainWindow() {
   mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
@@ -26,7 +25,7 @@ function createWindow() {
   });
 }
 
-app.on('ready', createWindow);
+app.on('ready', createMainWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -36,11 +35,17 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (mainWindow === null) {
-    createWindow();
+    createMainWindow();
   }
 });
 
 // Listen for events with ipcMain.handle
 ipcMain.handle('sayHello', (event, param: string) => {
   return "Hello " + param
+})
+
+ipcMain.handle('selectFolder', (event) => {
+  const result = dialog.showOpenDialogSync({ properties: ['openDirectory'] })
+  if (!result || !result.length) return 'No folder selected'
+  return result[0]
 })

@@ -1,14 +1,22 @@
 {
-  "name": "electron-typescript-angular",
+  "name": "byte-browser",
   "version": "0.0.0",
   "main": "build/main.js",
+  "author": {
+    "name": "Sumanth Perambuduri",
+    "email": "sumanthpera444@gmail.com"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "electron-start": "npm run electron-build && electron ./build/main.js --dev",
     "angular-build": "ng build --base-href",
     "electron-build": "tsc --project tsconfig.electron.json",
-    "electron-package": "npm run angular-build && npm run electron-build && npx electron-builder --publish never"
+    "electron-package": "npm run angular-build && npm run electron-build && npx electron-builder --publish never",
+    "electron-publish": "npm run angular-build && npm run electron-build && npx electron-builder --publish always",
+    "patch": "npm version patch -m v%s && git push && git push --tags",
+    "minor": "npm version minor -m v%s && git push && git push --tags",
+    "major": "npm version major -m v%s && git push && git push --tags"
   },
   "private": true,
   "dependencies": {
@@ -20,6 +28,9 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "electron-updater": "^6.3.9",
+    "primeflex": "^3.3.1",
+    "primeng": "^17.18.11",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
@@ -33,9 +44,27 @@
     "typescript": "~5.5.2"
   },
   "build": {
-    "appId": "dev.sumanth.yourappid",
+    "appId": "dev.sumanth.bytebrowser",
+    "productName": "Byte Browser",
     "files": [
       "build/"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/browser/assets/icon-256.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/browser/assets/icon-256.png"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "supersu-man",
+        "repo": "byte-browser",
+        "releaseType": "release",
+        "private": false
+      }
     ]
   }
 }

@@ -9,7 +9,7 @@ import { RouterOutlet } from '@angular/router';
   styles: [],
 })
 export class AppComponent {
-  title = 'electron-typescript-angular';
+  title = 'byte-browser';
   hello = ''
 
   constructor() {

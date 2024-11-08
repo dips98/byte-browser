@@ -1,4 +1,4 @@
-# electron-typescript-angular
+# byte-browser
 
 Really simple ELectron + Typescript + Angular boilerplate.
 
