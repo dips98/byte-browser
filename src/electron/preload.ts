@@ -5,5 +5,6 @@ contextBridge.exposeInMainWorld('api', {
 
     isDirectory: (path: string) => ipcRenderer.invoke('isDirectory', path),
     readDir: (folderPath: string) => ipcRenderer.invoke('readDir', folderPath),
-    fileSize: (filePath: string) => ipcRenderer.invoke('fileSize', filePath)
+    fileSize: (filePath: string) => ipcRenderer.invoke('fileSize', filePath),
+    onUpdateProgress: (callback: (value: string) => void) => ipcRenderer.on("updateProgess", (_event, value) => callback(value))
 })
