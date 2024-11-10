@@ -28,7 +28,7 @@
             <tr [ttRow]="rowNode">
                 <td>
                     <p-treeTableToggler [rowNode]="rowNode" />
-                    {{ rowData.path }}
+                    {{ rowData.name || rowData.path }}
                 </td>
                 <td style="width: 200px;">{{(rowData.size/(1024*1024)) | number: '1.4-5' }} MB</td>
             </tr>

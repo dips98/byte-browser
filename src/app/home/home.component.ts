@@ -20,8 +20,6 @@ export class HomeComponent {
   stats: TreeNode[] = []
   uri = ''
 
-  constructor() { }
-
   selectFolder = async () => {
     const folderPath = await (window as any).api.selectFolder();
     this.process_ongoing = true
@@ -51,6 +49,7 @@ export class HomeComponent {
         const child = children[index];
         const childStats = await this.getFolderStats(`${thePath}/${child}`)
         if(childStats) {
+          childStats.data.name = child
           ar.push(childStats)
           sum += childStats.data.size
         } 
@@ -58,7 +57,7 @@ export class HomeComponent {
       return { data: { path: thePath, size: sum }, children: ar  }
     } else {
       const size = await this.window.api.fileSize(thePath)
-      return { data: { path: thePath, size: size }  }
+      return { data: { path: thePath, name: '', size: size }  }
     }
   }
 
