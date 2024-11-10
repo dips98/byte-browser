@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -7,7 +8,7 @@ import { TreeTableModule } from 'primeng/treetable';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ButtonModule, PanelModule, TreeTableModule],
+  imports: [ButtonModule, PanelModule, TreeTableModule, CommonModule],
   templateUrl: './home.component.html',
   styles: ``
 })
@@ -21,8 +22,8 @@ export class HomeComponent {
   constructor() { }
 
   selectFolder = async () => {
-    this.process_ongoing = true
     const folderPath = await (window as any).api.selectFolder();
+    this.process_ongoing = true
     if (folderPath) {
       this.logs = []
       this.stats = []

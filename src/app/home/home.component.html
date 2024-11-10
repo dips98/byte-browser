@@ -10,11 +10,11 @@
         <p-button label="Cancel" class="px-2" (click)="process_ongoing=false"/> 
     }
 
-    <p-treeTable [value]="stats" [scrollable]="true">
+    <p-treeTable [value]="stats" styleClass="p-treetable-gridlines mt-2">
         <ng-template pTemplate="header">
             <tr>
                 <th>Name</th>
-                <th>Size</th>
+                <th style="width: 200px;">Size</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
@@ -23,8 +23,17 @@
                     <p-treeTableToggler [rowNode]="rowNode" />
                     {{ rowData.path }}
                 </td>
-                <td>{{ rowData.size }}</td>
+                <td style="width: 200px;">{{(rowData.size/(1024*1024)) | number: '1.4-5' }} MB</td>
             </tr>
         </ng-template>
+        <ng-template pTemplate="emptymessage">
+            @if (process_ongoing)  {
+
+                <tr>
+                    <td [attr.colspan]="2">Loading data</td>
+                </tr>
+            }
+        </ng-template>
     </p-treeTable>
+
 </div>
