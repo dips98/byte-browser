@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { lstatSync, readdirSync, statSync } from 'original-fs';
 import * as path from 'path';
 
 let mainWindow: Electron.BrowserWindow;
@@ -40,12 +41,21 @@ app.on('activate', () => {
 });
 
 // Listen for events with ipcMain.handle
-ipcMain.handle('sayHello', (event, param: string) => {
-  return "Hello " + param
-})
 
 ipcMain.handle('selectFolder', (event) => {
   const result = dialog.showOpenDialogSync({ properties: ['openDirectory'] })
-  if (!result || !result.length) return 'No folder selected'
-  return result[0]
+  if(result) return result[0]
+  else return ''
+})
+
+ipcMain.handle('isDirectory', (event, path) => {
+  return lstatSync(path).isDirectory()
+})
+
+ipcMain.handle('readDir', (event, path) => {
+  return readdirSync(path)
+})
+
+ipcMain.handle('fileSize', (event, path) => {
+  return statSync(path).size
 })

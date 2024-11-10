@@ -1,3 +1,30 @@
-<div class="h-full relative p-4">
-    <p-button label="Submit" class="centered-axis-xy" (click)="selectFolder()"/>
+<div class="h-full p-4">
+    <p-panel [showHeader]="false" styleClass="h-20rem mb-2 flex flex-column-reverse overflow-auto">
+        @for (log of logs; track $index) {
+            <div>{{log}}</div>
+        }
+    </p-panel>
+    
+    <p-button label="Select Folder" (click)="selectFolder()" [loading]="process_ongoing"/>
+    @if (process_ongoing) {
+        <p-button label="Cancel" class="px-2" (click)="process_ongoing=false"/> 
+    }
+
+    <p-treeTable [value]="stats" [scrollable]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Size</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+            <tr [ttRow]="rowNode">
+                <td>
+                    <p-treeTableToggler [rowNode]="rowNode" />
+                    {{ rowData.path }}
+                </td>
+                <td>{{ rowData.size }}</td>
+            </tr>
+        </ng-template>
+    </p-treeTable>
 </div>
