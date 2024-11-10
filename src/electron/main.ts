@@ -3,6 +3,7 @@ import { lstatSync, readdirSync, statSync } from 'original-fs';
 import * as path from 'path';
 
 let mainWindow: Electron.BrowserWindow;
+const assetsPath = process.argv.includes('--dev') ? '../src/assets' : 'browser/assets'
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -11,6 +12,7 @@ function createMainWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     },
+    icon: path.join(__dirname, assetsPath + '/icon.png')
   });
   mainWindow.removeMenu()
 
