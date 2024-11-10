@@ -5,10 +5,17 @@
         }
     </p-panel>
     
-    <p-button label="Select Folder" (click)="selectFolder()" [loading]="process_ongoing"/>
-    @if (process_ongoing) {
-        <p-button label="Cancel" class="px-2" (click)="process_ongoing=false"/> 
-    }
+    <div class="flex">
+        <p-button label="Select Folder" (click)="selectFolder()" [loading]="process_ongoing"/>
+        @if (process_ongoing) {
+            <p-button label="Cancel" class="px-2" (click)="process_ongoing=false"/> 
+        }
+        <div class="mx-auto"></div>
+        @if (stats.length > 0) {
+            <a class="p-button no-underline" [href]="uri" download='data.json'>Export</a>
+        }
+        <p-button class="px-2" label="Import" (click)="import()" />
+    </div>
 
     <p-treeTable [value]="stats" styleClass="p-treetable-gridlines mt-2">
         <ng-template pTemplate="header">

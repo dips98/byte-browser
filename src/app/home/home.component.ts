@@ -18,6 +18,7 @@ export class HomeComponent {
   process_ongoing = false
   logs: string[] = []
   stats: TreeNode[] = []
+  uri = ''
 
   constructor() { }
 
@@ -32,6 +33,7 @@ export class HomeComponent {
         this.logs.push("Process cancelled")
       } else if(stats) {
         this.stats = [ stats ]
+        this.uri = "data:application/json;charset=UTF-8," + encodeURIComponent(JSON.stringify(this.stats));
       }
     }
     this.process_ongoing = false
@@ -58,6 +60,11 @@ export class HomeComponent {
       const size = await this.window.api.fileSize(thePath)
       return { data: { path: thePath, size: size }  }
     }
+  }
+
+  import = async () => {
+    const fileData = await this.window.api.importFile()
+    if(fileData) this.stats = JSON.parse(fileData)
   }
 
 }

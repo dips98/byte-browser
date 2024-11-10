@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
-import { lstatSync, readdirSync, statSync } from 'original-fs';
+import { lstatSync, readdirSync, statSync, readFileSync } from 'original-fs';
 import path from 'path';
 import { autoUpdater } from "electron-updater"
 import url from 'url';
@@ -57,7 +57,6 @@ function createMainWindow() {
     mainWindow.destroy()
   });
 }
-
 
 // Update window
 function createUpdateWindow() {
@@ -118,4 +117,11 @@ ipcMain.handle('readDir', (event, path) => {
 
 ipcMain.handle('fileSize', (event, path) => {
   return statSync(path).size
+})
+
+ipcMain.handle('importFile', (event) => {
+  const result = dialog.showOpenDialogSync({ properties: ['openFile'], filters: [ { name: 'Json', extensions: ['json'] }] })
+  if(result && result[0])
+    return readFileSync(result[0], 'utf-8')
+  return ''
 })
