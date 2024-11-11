@@ -1,6 +1,39 @@
 # byte-browser
 
-Really simple ELectron + Typescript + Angular boilerplate.
+Really simple folder size stats browser
+
+## Node js
+
+If you do no wish to use Byte Browser and get folder size stats run the following nodejs code:
+```
+const { lstatSync, readdirSync, statSync } = require('fs')
+
+getFolderStats = (thePath) => {
+    console.log(thePath)
+    const isDir = lstatSync(thePath).isDirectory()
+    if(isDir) {
+      const children = readdirSync(thePath)
+      const ar = []
+      var sum = 0
+      for (let index = 0; index < children.length; index++) {
+        const child = children[index];
+        const childStats = getFolderStats(`${thePath}/${child}`)
+        if(childStats) {
+          childStats.data.name = child
+          ar.push(childStats)
+          sum += childStats.data.size
+        } 
+      }
+      return { data: { path: thePath, size: sum }, children: ar  }
+    } else {
+      const size = statSync(thePath).size
+      return { data: { path: thePath, name: '', size: size }  }
+    }
+}
+
+const stats = getFolderStats("path/to/your/folder")
+console.log(JSON.stringify(stats))
+```
 
 ## Development
 
@@ -9,5 +42,3 @@ Run `npm run start` and `npm run electron-start` simultaneously to use it for de
 ## Build
 
 Run `npm run electron-package` to build Angular+Electron dist uing Electron Builder.
-
-Note: Don't forget to change appId in package.json.
