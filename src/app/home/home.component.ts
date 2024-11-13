@@ -16,31 +16,21 @@ export class HomeComponent {
 
   window = (window as any)
   process_ongoing = false
-  logs = ''
   stats: TreeNode[] = []
   uri = ''
 
-  constructor (private zone: NgZone) { }
+  constructor () { }
 
-  ngOnInit(): void {
-    this.window.api.onLogs((path: string) => {
-      
-      this.zone.run(() => {
-        console.log(path)
-        // this.logs =path
-      })
-    })
-  }
+  ngOnInit(): void {}
 
   getFolderStats = async () => {
-    const startTime = performance.now()
-    this.logs = ""
+    const startTime = new Date().getTime()
     const folderPath = await (window as any).api.selectFolder();
     this.process_ongoing = true
     const folderStats = await (window as any).api.getFolderStats(folderPath);
-    console.log(folderStats)
+    this.stats = [folderStats]
     this.process_ongoing = false
-    const endTime = performance.now()
+    const endTime = new Date().getTime()
     console.log(`Test took ${(endTime - startTime) /1000} sec`)
   }
 

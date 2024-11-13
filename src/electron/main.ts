@@ -118,7 +118,6 @@ ipcMain.handle('importFile', (event) => {
 
 const getFolderStats = (thePath: string) => {
   mainWindow.webContents.send('onLogs', thePath)
-  console.log(thePath)
   const isDir = lstatSync(thePath).isDirectory()
   if(isDir) {
     const children = readdirSync(thePath)
