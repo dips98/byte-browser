@@ -3,6 +3,7 @@ import { lstatSync, readdirSync, statSync, readFileSync } from 'original-fs';
 import path from 'path';
 import { autoUpdater } from "electron-updater"
 import url from 'url';
+import { TreeNode } from 'primeng/api';
 
 if (process.platform === 'win32') {
   app.setAppUserModelId(app.name);
@@ -107,21 +108,39 @@ ipcMain.handle('selectFolder', (event) => {
   else return ''
 })
 
-ipcMain.handle('isDirectory', (event, path) => {
-  return lstatSync(path).isDirectory()
-})
-
-ipcMain.handle('readDir', (event, path) => {
-  return readdirSync(path)
-})
-
-ipcMain.handle('fileSize', (event, path) => {
-  return statSync(path).size
-})
 
 ipcMain.handle('importFile', (event) => {
   const result = dialog.showOpenDialogSync({ properties: ['openFile'], filters: [ { name: 'Json', extensions: ['json'] }] })
   if(result && result[0])
     return readFileSync(result[0], 'utf-8')
   return ''
+})
+
+const getFolderStats = (thePath: string) => {
+  mainWindow.webContents.send('onLogs', thePath)
+  console.log(thePath)
+  const isDir = lstatSync(thePath).isDirectory()
+  if(isDir) {
+    const children = readdirSync(thePath)
+    const ar: TreeNode[] = []
+    var sum = 0
+    for (let index = 0; index < children.length; index++) {
+      const child = children[index];
+      const childStats = getFolderStats(`${thePath}/${child}`)
+      if(childStats) {
+        childStats.data.name = child
+        ar.push(childStats)
+        sum += childStats.data.size
+      } 
+    }
+    return { data: { path: thePath, size: sum }, children: ar  }
+  } else {
+    const size = statSync(thePath).size
+    return { data: { path: thePath, name: '', size: size }  }
+  }
+}
+
+ipcMain.handle('getFolderStats', (event, thePath: string) => {
+  const folderStats = getFolderStats(thePath)
+  return folderStats
 })
