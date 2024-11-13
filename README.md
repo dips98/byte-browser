@@ -6,7 +6,7 @@ Really simple folder size stats browser
 
 If you do no wish to use Byte Browser and get folder size stats run the following nodejs code:
 ```
-const { lstatSync, readdirSync, statSync } = require('fs')
+const { lstatSync, readdirSync, statSync, writeFileSync } = require('fs')
 
 getFolderStats = (thePath) => {
     console.log(thePath)
@@ -32,6 +32,9 @@ getFolderStats = (thePath) => {
 }
 
 const stats = getFolderStats("path/to/your/folder")
+
+// Importable json file in Byte Browser
+writeFileSync('folder_stats.json', JSON.stringify([stats]))
 console.log(JSON.stringify(stats))
 ```
 
