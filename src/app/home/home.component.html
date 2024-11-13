@@ -11,6 +11,12 @@
         <p-button class="px-2" label="Import" (click)="import()" />
     </div>
 
+    <div class="mt-2">
+        Minimum file size filter: 
+        <p-inputNumber class="mx-2" [(ngModel)]="searchFilter" mode="decimal" inputId="withoutgrouping" [useGrouping]="false"/> 
+        MB
+    </div>
+
     <p-treeTable [value]="stats" styleClass="p-treetable-gridlines mt-2">
         <ng-template pTemplate="header">
             <tr>
@@ -19,13 +25,15 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
-            <tr [ttRow]="rowNode">
-                <td>
-                    <p-treeTableToggler [rowNode]="rowNode" />
-                    {{ rowData.name || rowData.path }}
-                </td>
-                <td style="width: 200px;">{{(rowData.size/(1024*1024)) | number: '1.4-5' }} MB</td>
-            </tr>
+            @if (rowData.size > (searchFilter * 1024 *1024)) {
+                <tr [ttRow]="rowNode">
+                    <td>
+                        <p-treeTableToggler [rowNode]="rowNode" />
+                        {{ rowData.name || rowData.path }}
+                    </td>
+                    <td style="width: 200px;">{{(rowData.size/(1024*1024)) | number: '1.4-5' }} MB</td>
+                </tr>
+            }
         </ng-template>
         <ng-template pTemplate="emptymessage">
             @if (process_ongoing)  {

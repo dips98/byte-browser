@@ -4,11 +4,13 @@ import { MessageService, TreeNode } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { TreeTableModule } from 'primeng/treetable';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ButtonModule, PanelModule, TreeTableModule, CommonModule],
+  imports: [ButtonModule, PanelModule, TreeTableModule, CommonModule, InputNumberModule, FormsModule],
   templateUrl: './home.component.html',
   styles: ``
 })
@@ -18,6 +20,7 @@ export class HomeComponent {
   process_ongoing = false
   stats: TreeNode[] = []
   uri = ''
+  searchFilter = 0
 
   constructor (private messageService: MessageService) { }
 
