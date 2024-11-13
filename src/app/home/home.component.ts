@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, NgZone } from '@angular/core';
-import { TreeNode } from 'primeng/api';
+import { MessageService, TreeNode } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { TreeTableModule } from 'primeng/treetable';
@@ -19,24 +19,28 @@ export class HomeComponent {
   stats: TreeNode[] = []
   uri = ''
 
-  constructor () { }
+  constructor (private messageService: MessageService) { }
 
   ngOnInit(): void {}
 
   getFolderStats = async () => {
     const startTime = new Date().getTime()
+    console.log(startTime)
     const folderPath = await (window as any).api.selectFolder();
     this.process_ongoing = true
     const folderStats = await (window as any).api.getFolderStats(folderPath);
     this.stats = [folderStats]
     this.process_ongoing = false
     const endTime = new Date().getTime()
+    console.log(endTime)
     console.log(`Test took ${(endTime - startTime) /1000} sec`)
+    this.messageService.add({ severity: 'success', summary: 'Process complete', detail: 'Successfully fetched stats for '+ folderPath });
   }
 
   import = async () => {
     const fileData = await this.window.api.importFile()
     if(fileData) this.stats = JSON.parse(fileData)
+    this.messageService.add({ severity: 'success', summary: 'Import complete', detail: 'Successfully imported json' });
   }
 
 }
