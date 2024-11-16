@@ -2,7 +2,7 @@
     <div class="flex">
         <p-button label="Select Folder" (click)="getFolderStats()" [loading]="process_ongoing"/>
         @if (process_ongoing) {
-            <p-button label="Cancel" class="px-2" (click)="process_ongoing=false"/> 
+            <p-button label="Cancel" class="px-2" (click)="killStats()"/> 
         }
         <div class="mx-auto"></div>
         @if (stats.length > 0) {

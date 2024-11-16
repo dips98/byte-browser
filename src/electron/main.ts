@@ -1,9 +1,9 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
-import { lstatSync, readdirSync, statSync, readFileSync } from 'original-fs';
+import { readFileSync } from 'original-fs';
 import path from 'path';
 import { autoUpdater } from "electron-updater"
 import url from 'url';
-import { TreeNode } from 'primeng/api';
+import { Worker } from 'worker_threads'
 
 if (process.platform === 'win32') {
   app.setAppUserModelId(app.name);
@@ -116,30 +116,14 @@ ipcMain.handle('importFile', (event) => {
   return ''
 })
 
-const getFolderStats = (thePath: string) => {
-  mainWindow.webContents.send('onLogs', thePath)
-  const isDir = lstatSync(thePath).isDirectory()
-  if(isDir) {
-    const children = readdirSync(thePath)
-    const ar: TreeNode[] = []
-    var sum = 0
-    for (let index = 0; index < children.length; index++) {
-      const child = children[index];
-      const childStats = getFolderStats(`${thePath}/${child}`)
-      if(childStats) {
-        childStats.data.name = child
-        ar.push(childStats)
-        sum += childStats.data.size
-      } 
-    }
-    return { data: { path: thePath, size: sum }, children: ar  }
-  } else {
-    const size = statSync(thePath).size
-    return { data: { path: thePath, name: '', size: size }  }
-  }
-}
+let worker: Worker
+ipcMain.handle('callFolderStats', (event, thePath: string) => {
+  worker = new Worker(path.join(__dirname, "worker.js"), { workerData: { thePath }})
+  worker.once("message", (message) => {
+    mainWindow.webContents.send('onFolderStats', message)
+  })
+})
 
-ipcMain.handle('getFolderStats', (event, thePath: string) => {
-  const folderStats = getFolderStats(thePath)
-  return folderStats
+ipcMain.handle('killFolderStats', (event) => {
+  worker && worker.terminate()
 })

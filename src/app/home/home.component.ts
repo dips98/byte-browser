@@ -22,22 +22,27 @@ export class HomeComponent {
   uri = ''
   searchFilter = 0
 
-  constructor (private messageService: MessageService) { }
+  constructor (private messageService: MessageService, private zone: NgZone) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.window.api.onFolderStats((data: TreeNode[]) => {
+      this.zone.run(() => {
+        this.stats = data
+        this.process_ongoing = false
+        this.messageService.add({ severity: 'success', summary: 'Process complete', detail: 'Successfully fetched stats for '+ this.stats[0].data.path });
+      })
+    })
+  }
 
   getFolderStats = async () => {
-    const startTime = new Date().getTime()
-    console.log(startTime)
-    const folderPath = await (window as any).api.selectFolder();
+    const folderPath = await this.window.api.selectFolder();
     this.process_ongoing = true
-    const folderStats = await (window as any).api.getFolderStats(folderPath);
-    this.stats = [folderStats]
+    await this.window.api.callFolderStats(folderPath);
+  }
+
+  killStats = () => {
+    this.window.api.killFolderStats()
     this.process_ongoing = false
-    const endTime = new Date().getTime()
-    console.log(endTime)
-    console.log(`Test took ${(endTime - startTime) /1000} sec`)
-    this.messageService.add({ severity: 'success', summary: 'Process complete', detail: 'Successfully fetched stats for '+ folderPath });
   }
 
   import = async () => {

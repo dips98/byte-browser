@@ -3,8 +3,9 @@ import { contextBridge, ipcRenderer } from 'electron'
 contextBridge.exposeInMainWorld('api', {
     selectFolder: () => ipcRenderer.invoke('selectFolder'),
 
-    getFolderStats: (path: string) => ipcRenderer.invoke('getFolderStats', path),
-    onLogs: (callback: (value: string) => void) => ipcRenderer.on("onLogs", (_event, value) => callback(value)),
+    callFolderStats: (path: string) => ipcRenderer.invoke('callFolderStats', path),
+    onFolderStats: (callback: (value: string) => void) => ipcRenderer.on("onFolderStats", (_event, value) => callback(value)),
+    killFolderStats: () => ipcRenderer.invoke('killFolderStats'),
 
     onUpdateProgress: (callback: (value: string) => void) => ipcRenderer.on("updateProgess", (_event, value) => callback(value)),
     importFile: () => ipcRenderer.invoke('importFile')
