@@ -2,6 +2,8 @@
 
 Really simple folder size stats browser
 
+![](githubdocs/screenshot.png)
+
 ## Node js
 
 If you do no wish to use Byte Browser and get folder size stats run the following nodejs code:
