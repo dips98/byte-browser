@@ -11,3 +11,7 @@ html, body {
     top: 50%;
     transform: translate(-50%,-50%);
 }
+
+.p-toast .p-toast-message .p-toast-message-content .p-icon {
+    width: 1rem;
+}
