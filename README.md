@@ -2,6 +2,12 @@
 
 Really simple folder size stats browser
 
+## Download
+
+[Latest version](https://github.com/supersu-man/byte-browser/releases/latest)
+
+## Screenshot
+
 ![](githubdocs/screenshot.png)
 
 ## Node js
